@@ -1,0 +1,42 @@
+{
+    "new" : "New",
+    "search": "Search",
+    "export": "Export",
+    "validate": "Validate",
+    "search": "Seach...",
+    "delete": "Delete",
+    "validate": "Validate",
+    "cancel": "Cancel",
+    "next": "Next",
+
+    "evenementState": "EvenementState",
+    "evenementStateTabPan": "Evenement state",
+    "evenementStateHeader": "Liste des evenement states",
+    "evenementStateReference": "Reference",
+    "evenementStateCode": "Code",
+    "evenement": "Evenement",
+    "evenementTabPan": "Evenement",
+    "evenementHeader": "Liste des evenements",
+    "evenementReference": "Reference",
+    "evenementEvenementStart": "Evenement start",
+    "evenementEvenementEnd": "Evenement end",
+    "evenementSalle": "Salle",
+    "evenementDescription": "Description",
+    "evenementEvenementState": "Evenement state",
+    "salle": "Salle",
+    "salleTabPan": "Salle",
+    "salleHeader": "Liste des salles",
+    "salleReference": "Reference",
+    "salleCode": "Code",
+    "salleBlocOperatoir": "Bloc operatoir",
+    "blocOperatoir": "BlocOperatoir",
+    "blocOperatoirTabPan": "Bloc operatoir",
+    "blocOperatoirHeader": "Liste des bloc operatoirs",
+    "blocOperatoirReference": "Reference",
+    "blocOperatoirCode": "Code",
+
+    "from-to": "Elements from {first} to {last} (total {totalRecords})"
+
+}
+
+

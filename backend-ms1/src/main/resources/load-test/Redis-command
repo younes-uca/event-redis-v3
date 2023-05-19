@@ -1,0 +1,42 @@
+start server
+start cli
+
+keys * ==> find all
+hgetall Evenement ==> find all object in Evenement
+flushdb ==> delete all or flushall
+monitor to monitor cli and lunch another cli to perform actions
+del "ev-1" => delete key "ev-1"
+
+get "ev-1" ==> you'll get the value (if no hash is applied)
+hget events "ev-1" ==> you'll get the value (if the hash is applied)
+hmget events ev-1 ev-2 ==> you'll get the value (if the hash is applied)
+
+set "ev-1" "zouani" ==> update or create key=ev-1 and value=zouani
+hset "hash-key" "ev-1" "zouani" ==> update or create key=ev-1 and value=zouani and zouani will be hashed
+
+setex myKey 10 myValue ==> set myKey with value of myValue and expire in 10 seconde
+ttl myKey ==> TIME to live for myKey
+setnx "ev-1" "zouani" ==> create key=ev-1 with value=zouani if the key not exist otherwise ignore
+strlen "ev-1" ==> 6 the length of zouani
+mset myKey1 myValue1 myKey2 myValue2
+decr myKey1 ==> decrement value of myKey1
+decrby myKey1 20 ==> decrement value of myKey1 by 20 value
+incr myKey1 ==> increment value of myKey1
+incrby myKey1 3 ==> increment value of myKey1 by 3
+append myKey " world" ==> get myKey "hello world"
+
+hmset events ev1 "hadi ev1" ev2 "hadi ev2" ==> create hashmap events with ev1 and ev2 keys
+hget events ev1 ==> get ev1 from events hashmap
+hgetall events ==> get all key velue in events
+hexists events ev1 ==> 1 if ev1 key exist ; else 0
+hdel events ev1 ==> delete ev1 key and value
+
+hsetnx events ev1 "hadi ev11"==> set if not exist
+hkeys events ==> get all keys
+hvals events ==> get all values
+hincrby events ev1 3 ==> increment ev1 in events by 3
+
+hlen events ==> number of element in events
+
+SUBSCRIBE z-channel
+PUBLISH z-channel "aweda awel message"

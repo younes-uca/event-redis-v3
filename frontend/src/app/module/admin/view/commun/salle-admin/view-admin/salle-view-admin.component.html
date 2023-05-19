@@ -1,0 +1,36 @@
+
+<p-dialog [(visible)]="viewDialog" [style]="{width: '70vw'}" header="{{'salleTabPan' | translate}}" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <p-tabView>
+            <p-tabPanel header="{{'salleTabPan' | translate}}">
+                <div class="grid">
+                    <div class="field col-12 md:col-6">
+                        <label for="1">{{'Reference' | translate}}</label>
+                        <input class="mb-2 mr-2" type="text" pInputText [disabled]="true" placeholder="{{'Reference' | translate}}" autofocus  id="1" [(ngModel)]="item.reference">
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <label for="2">{{'Code' | translate}}</label>
+                        <input class="mb-2 mr-2" type="text" pInputText [disabled]="true" placeholder="{{'Code' | translate}}" autofocus  id="2" [(ngModel)]="item.code">
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <label for="3">{{'Bloc operatoir' | translate}}</label>
+                        <p-dropdown [options]="blocOperatoirs" [(ngModel)]="item.blocOperatoir" id="3" [disabled]="true" optionLabel="reference" placeholder="{{'Bloc operatoir' | translate}}"></p-dropdown>
+                    </div>
+                </div>
+            </p-tabPanel>
+
+        </p-tabView>
+
+    </ng-template>
+
+    <ng-template pTemplate="footer" >
+        <div class="grid-footer">
+            <div>
+                <button pButton pRipple label="Annuler" icon="pi pi-times" class="p-button-outlined" (click)="hideViewDialog()"></button>
+            </div>
+        </div>
+    </ng-template>
+</p-dialog>
+
+
+

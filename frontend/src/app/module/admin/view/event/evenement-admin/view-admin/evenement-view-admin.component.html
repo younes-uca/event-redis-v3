@@ -1,0 +1,48 @@
+
+<p-dialog [(visible)]="viewDialog" [style]="{width: '70vw'}" header="{{'evenementTabPan' | translate}}" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <p-tabView>
+            <p-tabPanel header="{{'evenementTabPan' | translate}}">
+                <div class="grid">
+                    <div class="field col-12 md:col-6">
+                        <label for="1">{{'Reference' | translate}}</label>
+                        <input class="mb-2 mr-2" type="text" pInputText [disabled]="true" placeholder="{{'Reference' | translate}}" autofocus  id="1" [(ngModel)]="item.reference">
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <label for="2">{{'Evenement start' | translate}}</label>
+                        <p-calendar id="2" [disabled]="true"  [showTime]="true" [showSeconds]="false" placeholder="{{'Evenement start' | translate}}"  [(ngModel)]="item.evenementStart" dateFormat="{{dateFormat}}"></p-calendar>
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <label for="3">{{'Evenement end' | translate}}</label>
+                        <p-calendar id="3" [disabled]="true"  [showTime]="true" [showSeconds]="false" placeholder="{{'Evenement end' | translate}}"  [(ngModel)]="item.evenementEnd" dateFormat="{{dateFormat}}"></p-calendar>
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <label for="4">{{'Salle' | translate}}</label>
+                        <p-dropdown [options]="salles" [(ngModel)]="item.salle" id="4" [disabled]="true" optionLabel="reference" placeholder="{{'Salle' | translate}}"></p-dropdown>
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <label for="5">{{'Description' | translate}}</label>
+                        <textarea id="5" pInputTextarea rows="5" cols="30" [disabled]="true" placeholder="{{'Description' | translate}}"  [(ngModel)]="item.description"></textarea>
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <label for="6">{{'Evenement state' | translate}}</label>
+                        <p-dropdown [options]="evenementStates" [(ngModel)]="item.evenementState" id="6" [disabled]="true" optionLabel="reference" placeholder="{{'Evenement state' | translate}}"></p-dropdown>
+                    </div>
+                </div>
+            </p-tabPanel>
+
+        </p-tabView>
+
+    </ng-template>
+
+    <ng-template pTemplate="footer" >
+        <div class="grid-footer">
+            <div>
+                <button pButton pRipple label="Annuler" icon="pi pi-times" class="p-button-outlined" (click)="hideViewDialog()"></button>
+            </div>
+        </div>
+    </ng-template>
+</p-dialog>
+
+
+

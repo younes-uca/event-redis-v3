@@ -1,0 +1,35 @@
+Redis note:
+1- lunch redis-server.exe
+2- lunch redis-cli.exe
+3-
+  a- keys * ==> ( all keys li homa reference de block operatoir) bloc1 bloc2
+  b- hgetall bloc1 ==> ( all event in block operatoir)
+
+---------------------------
+http://localhost:8036/api/admin/evenement/
+{
+    "reference": "EV-2_S-1_B-2_05-15-2023",
+    "description": "desc 2",
+    "salle": {
+      "reference": "salle1",
+      "blocOperatoir": {
+        "reference": "bloc2"
+      }
+    }
+  }
+
+--------------------------------
+http://localhost:8036/api/admin/evenement/
+
+{
+    "reference":"{{reference}}",
+    "description":"{{description}}",
+    "salle": {
+    "reference": "{{salle_reference}}",
+    "blocOperatoir": {
+      "reference": "{{blocOperatoir_reference}}"
+    }
+  }
+
+}
+
