@@ -3,6 +3,7 @@ import {PrimeNGConfig} from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import {Observable} from 'rxjs';
 import {RoleService} from 'src/app/zynerator/security/Role.service';
+import {CouchdbService} from "./controller/service/couchdb.service";
 
 @Component({
     selector: 'app-root',
@@ -25,7 +26,8 @@ export class AppComponent implements OnInit {
     //     translateService.use(browserLang.match(/en|fr/) ? browserLang : 'fr');
     // }
 
-    constructor(private primengConfig: PrimeNGConfig, private roleService: RoleService, private translateService: TranslateService) {
+    constructor(private primengConfig: PrimeNGConfig, private roleService: RoleService,
+                private translateService: TranslateService, private couchdbService: CouchdbService) {
         translateService.addLangs(['ar','en', 'fr']);
         translateService.setDefaultLang('en');
         const browserLang = translateService.getBrowserLang();
@@ -44,6 +46,10 @@ export class AppComponent implements OnInit {
                 this.topbarColor = 'layout-topbar-blue';
             }
 
+        });
+
+        this.couchdbService.startFetchingData().subscribe(data => {
+            console.log(data)
         });
     }
 
