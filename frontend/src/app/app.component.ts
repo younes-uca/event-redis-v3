@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import {Observable} from 'rxjs';
 import {RoleService} from 'src/app/zynerator/security/Role.service';
 import {CouchdbService} from "./controller/service/couchdb.service";
+import {IndexeddbService} from "./controller/service/indexeddb.service";
 
 @Component({
     selector: 'app-root',
@@ -27,7 +28,8 @@ export class AppComponent implements OnInit {
     // }
 
     constructor(private primengConfig: PrimeNGConfig, private roleService: RoleService,
-                private translateService: TranslateService, private couchdbService: CouchdbService) {
+                private translateService: TranslateService, private couchdbService: CouchdbService,
+                private indexeddbService: IndexeddbService) {
         translateService.addLangs(['ar','en', 'fr']);
         translateService.setDefaultLang('en');
         const browserLang = translateService.getBrowserLang();
@@ -48,7 +50,11 @@ export class AppComponent implements OnInit {
 
         });
 
-        this.couchdbService.startFetchingData().subscribe(data => {
+        // this.couchdbService.startFetchingData().subscribe(data => {
+        //     console.log(data)
+        // });
+
+        this.indexeddbService.startFetchingData().subscribe(data => {
             console.log(data)
         });
     }
