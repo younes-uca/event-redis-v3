@@ -130,5 +130,12 @@ public class Evenement   extends AuditBusinessObject implements Serializable {
         return Objects.hash(id);
     }
 
+    @Override
+    public String toString() {
+        return "Evenement{" +
+                "reference='" + reference + '\'' +
+                ", salle=" + salle.getBlocOperatoir().getReference() +
+                '}';
+    }
 }
 

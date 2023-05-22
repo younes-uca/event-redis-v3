@@ -1,5 +1,6 @@
 package ma.sir.event.zynerator.service;
 
+import ma.sir.event.bean.core.Evenement;
 import ma.sir.event.zynerator.audit.AuditBusinessObject;
 import ma.sir.event.zynerator.criteria.BaseCriteria;
 import ma.sir.event.zynerator.dto.AuditEntityDto;
@@ -336,6 +337,7 @@ public abstract class AbstractServiceImpl<T extends AuditBusinessObject, H exten
         this.historyCriteriaClass = historyCriteriaClass;
         this.specificationClass = specificationClass;
     }
+
 
     public abstract void configure();
 

@@ -13,9 +13,7 @@ import {SalleDto} from 'src/app/controller/model/Salle.model';
 import {WebsocketService} from "../../../../../../controller/service/websocket.service";
 import {BlocOperatoirDto} from "../../../../../../controller/model/BlocOperatoir.model";
 import {BlocOperatoirService} from "../../../../../../controller/service/BlocOperatoir.service";
-import {Observable, Subject} from "rxjs";
 import {WebSocketService} from "../../../../../../controller/service/web-socket.service";
-import * as io from 'socket.io-client';
 import {Socket} from "ngx-socket-io";
 
 
@@ -31,7 +29,7 @@ export class EvenementListAdminComponent extends AbstractListController<Evenemen
     evenementStates: Array<EvenementStateDto>;
     blocOperatoires: Array<BlocOperatoirDto>;
     selectedBloc: any;
-    bloc:any;
+    bloc: any;
 
     constructor(evenementService: EvenementService, private blocOperatoirService: BlocOperatoirService, private webSocketService: WebsocketService, private salleService: SalleService, private evenementStateService: EvenementStateService
         , private webSocketS: WebSocketService) {
@@ -48,6 +46,9 @@ export class EvenementListAdminComponent extends AbstractListController<Evenemen
         this.loadSalle();
         this.loadEvenementState();
         this.loadBlocOperatoire();
+        setInterval(() => {
+            this.openWebS();
+        }, 10000);
     }
 
     public async loadEvenements() {
@@ -138,22 +139,29 @@ export class EvenementListAdminComponent extends AbstractListController<Evenemen
     public onBlocSelected() {
         // this.subscribeToEventStream(this.selectedBloc.reference);
     }
-    getSelectedBloc():string{
+
+    getSelectedBloc(): string {
         return this.selectedBloc.reference
-}
+    }
 
 
-    async openWebS() {
-        await this.webSocketS.openWebSocket(this.selectedBloc.reference);
+    public openWebS(): void {
+        /*await this.webSocketS.openWebSocket(this.selectedBloc.reference);
         console.log(this.selectedBloc.reference);
         await this.webSocketS.earchObjectsByReference(this.selectedBloc.reference);
         console.log('awaiting before getting the events');
         this.items = await this.webSocketS.getEvents() ;
         console.log(this.items)// Add 'await' keyword
-        console.log("finn open "+this.selectedBloc.reference)
+        console.log("finn open "+this.selectedBloc.reference)*/
+        if (this.selectedBloc != null && this.selectedBloc.reference != null){
+            console.log('about to featch data for block '+this.selectedBloc.reference);
+            this.service.findBySalleBlockOperatoirReference(this.selectedBloc.reference).subscribe(data=> {
+                this.items = data;
+                console.log('featched data for block '+data);
+            });
+        }
+
     }
-
-
 
 
 }
