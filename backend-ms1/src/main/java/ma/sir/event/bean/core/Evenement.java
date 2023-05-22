@@ -29,7 +29,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "evenement")
-//@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonSerialize
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "itemCache")
 @SequenceGenerator(name="evenement_seq",sequenceName="evenement_seq",allocationSize=1, initialValue = 1)

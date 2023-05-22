@@ -17,6 +17,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @RedisHash("Evenement")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+
 @JsonFormat
 public class EvenementRedis extends AuditBusinessObject implements Serializable {
     @Id

@@ -39,8 +39,8 @@ public class SocketController {
 //        }
 //        return null;
 //    }
-    @GetMapping("bloc-operatoire/{referenceBloc}")
+    /*@GetMapping("bloc-operatoire/{referenceBloc}")
     public Flux<EvenementRedis> findAll(@PathVariable String referenceBloc) {
         return evenementAdminRedisService.findAll(referenceBloc);
-    }
+    }*/
 }

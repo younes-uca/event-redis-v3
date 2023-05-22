@@ -85,7 +85,7 @@ public class EvenementAdminServiceImpl extends AbstractServiceImpl<Evenement, Ev
             return ImmutableList.copyOf(evenementRedisList);
         } else {
             List<EvenementRedis> evenementRedis = retrieveFromDatabase(reference);
-            if (!evenementRedis.isEmpty()) {
+           /* if (!evenementRedis.isEmpty()) {
                 System.out.println("******************* DB *******************");
                 Map<String, List<EvenementRedis>> evenementRedisMap = new HashMap<>();
                 evenementRedisMap.put(reference, evenementRedis);
@@ -95,11 +95,14 @@ public class EvenementAdminServiceImpl extends AbstractServiceImpl<Evenement, Ev
                 return evenementRedis;
             } else {
                 return Collections.emptyList();
-            }
+            }*/
+            return Collections.emptyList();
+
         }
     }
 
     private List<EvenementRedis> retrieveFromDatabase(String ref) {
+        System.out.println("******************* DB *******************");
         List<Evenement> evenementList = dao.findBySalleBlocOperatoirReference(ref);
         List<EvenementRedis> evenementRedisList = convert(evenementList);
         if (!evenementRedisList.isEmpty()) {
@@ -125,10 +128,12 @@ public class EvenementAdminServiceImpl extends AbstractServiceImpl<Evenement, Ev
     }
 
     private Flux<EvenementRedis> findBySalleBlocOperatoirReferenceInRedis(String reference) {
-        return template.opsForHash().get(String.valueOf(KEY), reference)
-                .flux()
+        return template.opsForHash().values(reference)
+
                 .map(object -> (EvenementRedis) object);
     }
+
+
 
     public int deleteBySalleId(Long id) {
         return dao.deleteBySalleId(id);

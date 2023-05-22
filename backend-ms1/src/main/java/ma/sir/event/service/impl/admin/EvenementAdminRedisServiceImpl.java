@@ -1,5 +1,6 @@
 package ma.sir.event.service.impl.admin;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import ma.sir.event.bean.core.EvenementRedis;
 import ma.sir.event.ws.dto.BlocOperatoirDto;
@@ -10,7 +11,10 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -50,10 +54,16 @@ public class EvenementAdminRedisServiceImpl {
         return Mono.empty();
     }
 
+
+
+
     public Flux<EvenementRedis> findAll(String referenceBloc) {
         return template.opsForHash().values(referenceBloc)
                 .map(object -> (EvenementRedis) object);
     }
+
+
+
 
 
     public Mono<EvenementRedis> findByReference(String referenceBloc, String reference) {

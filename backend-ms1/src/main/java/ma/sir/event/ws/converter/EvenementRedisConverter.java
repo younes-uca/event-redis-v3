@@ -61,10 +61,10 @@ public class EvenementRedisConverter {
                 dto.setEvenementEnd(DateUtil.dateTimeToString(item.getEvenementEnd()));
             if (StringUtil.isNotEmpty(item.getDescription()))
                 dto.setDescription(item.getDescription());
-            if (this.salle && item.getSalle() != null) {
+            if ( item.getSalle() != null) {
                 dto.setSalle(salleConverter.toDto(item.getSalle()));
             }
-            if (this.evenementState && item.getEvenementState() != null) {
+            if (item.getEvenementState() != null) {
                 dto.setEvenementState(evenementStateConverter.toDto(item.getEvenementState()));
             }
 
