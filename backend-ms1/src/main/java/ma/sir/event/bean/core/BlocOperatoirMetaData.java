@@ -36,6 +36,7 @@ public class BlocOperatoirMetaData extends AuditBusinessObject implements Serial
     }
 
     public BlocOperatoirMetaData(String reference) {
+        this.reference = reference;
         this.lastUpdate = LocalDateTime.now();
     }
 
