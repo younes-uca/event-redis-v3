@@ -24,6 +24,7 @@ public class DateUtil {
     public static final String DATE_FORMAT_WITH6 = "yyyy-MM-dd-HH-mm-ss";
     public static final String DATE_FORMAT_PF = "EEE MMM dd HH:mm:ss z yyyy";
     public static final long ONE_HOUR = 60 * 60 * 1000L;
+    public static final String NULL = "null";
 
 
     public static Calendar dateToCalendar(final Date date) {
@@ -100,7 +101,7 @@ public class DateUtil {
 
     public static LocalDateTime convert(final String strDate) {
         try {
-            if (StringUtils.hasLength(strDate)) {
+            if (!NULL.equals(strDate) && StringUtils.hasLength(strDate)) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT_WITH6);
                 return LocalDateTime.parse(strDate, formatter);
             }
