@@ -100,10 +100,14 @@ public class EvenementAdminServiceImpl extends AbstractServiceImpl<Evenement, Ev
     public BlocOperatoireInformation findBySalleBlocOperatoirReference(String reference, LocalDateTime lastUpdateInFrontEnd) {
         BlocOperatoirMetaData blocOperatoirMetaData = blocOperatoirMetaDataDao.findByReference(reference);
         int flag = 1;
+        LocalDateTime myDate = null;
+        BlocOperatoirMetaData myBlocOperatoirMetaData = null;
         if (blocOperatoirMetaData == null) {
-            saveBlocOperatoireMetaData(reference);
+            myBlocOperatoirMetaData = saveBlocOperatoireMetaData(reference);
+            myDate = myBlocOperatoirMetaData.getLastUpdate();
         } else if (!blocOperatoirMetaData.getLastUpdate().equals(lastUpdateInFrontEnd)) {
             flag = 2;
+            myDate = blocOperatoirMetaData.getLastUpdate();
         } else {
             System.out.println("******************* NO CHANGE DETECTED *******************");
             return null;
@@ -113,12 +117,12 @@ public class EvenementAdminServiceImpl extends AbstractServiceImpl<Evenement, Ev
             List<EvenementRedis> evenementRedisList = evenementRedisFlux.collectList().block();
             System.out.println("******************* REDIS *******************");
             //ImmutableList.copyOf(evenementRedisList)
-            return new BlocOperatoireInformation(blocOperatoirMetaData.getReference(), DateUtil.convert(blocOperatoirMetaData.getLastUpdate()), evenementRedisList);
+            return new BlocOperatoireInformation(blocOperatoirMetaData.getReference(), DateUtil.convert(myDate), evenementRedisList);
         } else {
             System.out.println("******************* DB *******************");
             List<Evenement> evenementList = dao.findBySalleBlocOperatoirReference(reference);
             List<EvenementRedis> evenementRedis = putInRedis(reference, evenementList);
-            return new BlocOperatoireInformation(reference, DateUtil.convert(lastUpdateInFrontEnd), evenementRedis);
+            return new BlocOperatoireInformation(reference, DateUtil.convert(myDate), evenementRedis);
         }
     }
 
