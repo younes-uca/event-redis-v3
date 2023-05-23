@@ -1,12 +1,13 @@
 package ma.sir.event.service.impl.admin;
 
 import com.corundumstudio.socketio.SocketIOServer;
-import com.google.common.collect.ImmutableList;
+import ma.sir.event.bean.core.BlocOperatoirMetaData;
 import ma.sir.event.bean.core.Evenement;
 import ma.sir.event.bean.core.EvenementRedis;
 import ma.sir.event.bean.history.EvenementHistory;
 import ma.sir.event.dao.criteria.core.EvenementCriteria;
 import ma.sir.event.dao.criteria.history.EvenementHistoryCriteria;
+import ma.sir.event.dao.facade.core.BlocOperatoirMetaDataDao;
 import ma.sir.event.dao.facade.core.EvenementDao;
 import ma.sir.event.dao.facade.history.EvenementHistoryDao;
 import ma.sir.event.dao.specification.core.EvenementSpecification;
@@ -15,15 +16,16 @@ import ma.sir.event.service.facade.admin.EvenementStateAdminService;
 import ma.sir.event.service.facade.admin.SalleAdminService;
 import ma.sir.event.ws.converter.EvenementRedisConverter;
 import ma.sir.event.zynerator.service.AbstractServiceImpl;
+import ma.sir.event.zynerator.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.*;
-
-import static redis.clients.jedis.Protocol.Keyword.KEY;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class EvenementAdminServiceImpl extends AbstractServiceImpl<Evenement, EvenementHistory, EvenementCriteria, EvenementHistoryCriteria, EvenementDao,
@@ -34,6 +36,8 @@ public class EvenementAdminServiceImpl extends AbstractServiceImpl<Evenement, Ev
     private EvenementRedisConverter evenementRedisConverter;
     @Autowired
     private EvenementAdminRedisServiceImpl evenementAdminRedisService;
+    @Autowired
+    private BlocOperatoirMetaDataDao blocOperatoirMetaDataDao;
     @Autowired
     private ReactiveRedisTemplate<String, EvenementRedis> template;
 
@@ -49,6 +53,7 @@ public class EvenementAdminServiceImpl extends AbstractServiceImpl<Evenement, Ev
                     Evenement saved = super.create(evenement);
                     EvenementRedis savedRedis = evenementRedisConverter.toDto(saved);
                     evenementAdminRedisService.save(savedRedis);
+                    saveOrUpdateBlocOperatoireMetaData(evenement.getSalle().getBlocOperatoir().getReference());
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -57,12 +62,27 @@ public class EvenementAdminServiceImpl extends AbstractServiceImpl<Evenement, Ev
                     Evenement updated = super.update(evenement);
                     EvenementRedis updatedRedis = evenementRedisConverter.toDto(updated);
                     evenementAdminRedisService.save(updatedRedis);
+                    saveOrUpdateBlocOperatoireMetaData(evenement.getSalle().getBlocOperatoir().getReference());
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
         });
         return evenement;
+    }
+
+    private void saveOrUpdateBlocOperatoireMetaData(String referenceBlocOperatoire) {
+        BlocOperatoirMetaData blocOperatoirMetaData = blocOperatoirMetaDataDao.findByReference(referenceBlocOperatoire);
+        if (blocOperatoirMetaData == null) {
+            blocOperatoirMetaDataDao.save(new BlocOperatoirMetaData(referenceBlocOperatoire));
+        }else{
+            blocOperatoirMetaData.setLastUpdate(LocalDateTime.now());
+            blocOperatoirMetaDataDao.save(blocOperatoirMetaData);
+        }
+    }
+
+    private void saveBlocOperatoireMetaData(String referenceBlocOperatoire) {
+        blocOperatoirMetaDataDao.save(new BlocOperatoirMetaData(referenceBlocOperatoire));
     }
 
 
@@ -77,38 +97,37 @@ public class EvenementAdminServiceImpl extends AbstractServiceImpl<Evenement, Ev
     }
 
     @Override
-    public List<EvenementRedis> findBySalleBlocOperatoirReference(String reference) {
-        Flux<EvenementRedis> evenementRedisFlux = findBySalleBlocOperatoirReferenceInRedis(reference);
-        List<EvenementRedis> evenementRedisList = evenementRedisFlux.collectList().block();
-        if (evenementRedisList != null && !evenementRedisList.isEmpty()) {
-            System.out.println("******************* REDIS *******************");
-            return ImmutableList.copyOf(evenementRedisList);
+    public BlocOperatoireInformation findBySalleBlocOperatoirReference(String reference, LocalDateTime lastUpdateInFrontEnd) {
+        BlocOperatoirMetaData blocOperatoirMetaData = blocOperatoirMetaDataDao.findByReference(reference);
+        int flag = 1;
+        if (blocOperatoirMetaData == null) {
+            saveBlocOperatoireMetaData(reference);
+        } else if (!blocOperatoirMetaData.getLastUpdate().equals(lastUpdateInFrontEnd)) {
+            flag = 2;
         } else {
-            List<EvenementRedis> evenementRedis = retrieveFromDatabase(reference);
-           /* if (!evenementRedis.isEmpty()) {
-                System.out.println("******************* DB *******************");
-                Map<String, List<EvenementRedis>> evenementRedisMap = new HashMap<>();
-                evenementRedisMap.put(reference, evenementRedis);
-                template.opsForHash()
-                        .putAll(reference, evenementRedisMap)
-                        .block();
-                return evenementRedis;
-            } else {
-                return Collections.emptyList();
-            }*/
-            return Collections.emptyList();
-
+            System.out.println("******************* NO CHANGE DETECTED *******************");
+            return null;
+        }
+        if (flag ==2) {
+            Flux<EvenementRedis> evenementRedisFlux = findBySalleBlocOperatoirReferenceInRedis(reference);
+            List<EvenementRedis> evenementRedisList = evenementRedisFlux.collectList().block();
+            System.out.println("******************* REDIS *******************");
+            //ImmutableList.copyOf(evenementRedisList)
+            return new BlocOperatoireInformation(blocOperatoirMetaData.getReference(), DateUtil.convert(blocOperatoirMetaData.getLastUpdate()),evenementRedisList);
+        } else {
+            System.out.println("******************* DB *******************");
+            List<Evenement> evenementList = dao.findBySalleBlocOperatoirReference(reference);
+            List<EvenementRedis> evenementRedis = putInRedis(reference, evenementList);
+            return new BlocOperatoireInformation(blocOperatoirMetaData.getReference(), DateUtil.convert(blocOperatoirMetaData.getLastUpdate()),evenementRedis);
         }
     }
 
-    private List<EvenementRedis> retrieveFromDatabase(String ref) {
-        System.out.println("******************* DB *******************");
-        List<Evenement> evenementList = dao.findBySalleBlocOperatoirReference(ref);
+    private List<EvenementRedis> putInRedis(String reference, List<Evenement> evenementList) {
         List<EvenementRedis> evenementRedisList = convert(evenementList);
         if (!evenementRedisList.isEmpty()) {
             for (EvenementRedis evenementRedis : evenementRedisList) {
                 template.opsForHash()
-                        .put(ref, String.valueOf(evenementRedis.getReference()), evenementRedis)
+                        .put(reference, String.valueOf(evenementRedis.getReference()), evenementRedis)
                         .subscribe();
             }
         }
@@ -132,7 +151,6 @@ public class EvenementAdminServiceImpl extends AbstractServiceImpl<Evenement, Ev
 
                 .map(object -> (EvenementRedis) object);
     }
-
 
 
     public int deleteBySalleId(Long id) {

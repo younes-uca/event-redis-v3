@@ -6,5 +6,6 @@ export class BlocOperatoirDto  extends BaseDto{
     public id: number;
     public reference: string;
     public code: string;
+    public lastUpdate: string;
 
 }

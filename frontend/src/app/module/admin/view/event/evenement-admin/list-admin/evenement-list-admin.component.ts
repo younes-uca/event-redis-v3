@@ -28,7 +28,7 @@ export class EvenementListAdminComponent extends AbstractListController<Evenemen
     salles: Array<SalleDto>;
     evenementStates: Array<EvenementStateDto>;
     blocOperatoires: Array<BlocOperatoirDto>;
-    selectedBloc: any;
+    selectedBloc: BlocOperatoirDto;
     bloc: any;
 
     constructor(evenementService: EvenementService, private blocOperatoirService: BlocOperatoirService, private webSocketService: WebsocketService, private salleService: SalleService, private evenementStateService: EvenementStateService
@@ -48,7 +48,7 @@ export class EvenementListAdminComponent extends AbstractListController<Evenemen
         this.loadBlocOperatoire();
         setInterval(() => {
             this.openWebS();
-        }, 10000);
+        }, 20000);
     }
 
     public async loadEvenements() {
@@ -153,11 +153,18 @@ export class EvenementListAdminComponent extends AbstractListController<Evenemen
         this.items = await this.webSocketS.getEvents() ;
         console.log(this.items)// Add 'await' keyword
         console.log("finn open "+this.selectedBloc.reference)*/
-        if (this.selectedBloc != null && this.selectedBloc.reference != null){
-            console.log('about to featch data for block '+this.selectedBloc.reference);
-            this.service.findBySalleBlockOperatoirReference(this.selectedBloc.reference).subscribe(data=> {
-                this.items = data;
-                console.log('featched data for block '+data);
+        if (this.selectedBloc != null && this.selectedBloc.reference != null) {
+            console.log('about to featch data for block ' + this.selectedBloc.reference);
+            let lastUpdate = localStorage.getItem(this.selectedBloc.reference);
+            this.service.findBySalleBlockOperatoirReference(this.selectedBloc.reference, lastUpdate).subscribe(data => {
+                if (data != null) {
+                    localStorage.setItem(this.selectedBloc.reference, data.lastUpdate);
+                    this.items = data.evenementRediss;
+                    console.log('featched data for block ' + data);
+                } else {
+                    console.log('No change have been performed');
+                }
+
             });
         }
 

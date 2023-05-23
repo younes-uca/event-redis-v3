@@ -21,6 +21,7 @@ public class DateUtil {
     public final static String DATE_FORMAT_FILE = "yyMMddHHmmss";
     public static final String HOUR_FORMAT = "HH:mm:ss";
     public static final String DATE_FORMAT_ENG = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    public static final String DATE_FORMAT_WITH6 = "yyyy-MM-dd-HH-mm-ss";
     public static final String DATE_FORMAT_PF = "EEE MMM dd HH:mm:ss z yyyy";
     public static final long ONE_HOUR = 60 * 60 * 1000L;
 
@@ -94,6 +95,31 @@ public class DateUtil {
             throw new BusinessRuleException("errors.format.datetime");
         }
 
+        return null;
+    }
+
+    public static LocalDateTime convert(final String strDate) {
+        try {
+            if (StringUtils.hasLength(strDate)) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT_WITH6);
+                return LocalDateTime.parse(strDate, formatter);
+            }
+        } catch (Exception e) {
+            throw new BusinessRuleException("errors.format.datetime");
+        }
+
+        return null;
+    }
+
+    public static String convert(final LocalDateTime localDateTime) {
+        try {
+            if (localDateTime != null) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT_WITH6);
+                return formatter.format(localDateTime);
+            }
+        } catch (Exception e) {
+            throw new BusinessRuleException("errors.format.datetime");
+        }
         return null;
     }
 

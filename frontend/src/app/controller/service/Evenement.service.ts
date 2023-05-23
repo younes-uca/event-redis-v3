@@ -8,6 +8,7 @@ import {EvenementDto} from '../model/Evenement.model';
 import {EvenementCriteria} from '../criteria/EvenementCriteria.model';
 import {AbstractService} from 'src/app/zynerator/service/AbstractService';
 import {Observable} from "rxjs";
+import {BlocOperatoirInformationDto} from "../model/BlocOperatoirInformation.model";
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +20,8 @@ export class EvenementService extends AbstractService<EvenementDto, EvenementCri
         this.setApi(environment.apiUrl + 'admin/evenement/');
     }
 
-    public findBySalleBlockOperatoirReference(reference: string): Observable<Array<EvenementDto>>{
-        return this.http.get<Array<EvenementDto>>(this.API + 'bloc-operatoir/reference/' + reference)
+    public findBySalleBlockOperatoirReference(reference: string, lastUpdate: string): Observable<BlocOperatoirInformationDto>{
+        return this.http.get<BlocOperatoirInformationDto>(this.API + 'bloc-operatoir/reference/' + reference+'/lastUpdate/' +lastUpdate)
     }
 
     public constrcutDto(): EvenementDto {

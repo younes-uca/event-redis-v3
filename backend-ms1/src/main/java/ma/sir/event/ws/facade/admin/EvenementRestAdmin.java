@@ -4,6 +4,7 @@ package ma.sir.event.ws.facade.admin;
 import com.corundumstudio.socketio.SocketIOServer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import ma.sir.event.bean.core.BlocOperatoirMetaData;
 import ma.sir.event.bean.core.Evenement;
 import ma.sir.event.bean.core.EvenementRedis;
 import ma.sir.event.bean.history.EvenementHistory;
@@ -11,12 +12,15 @@ import ma.sir.event.dao.criteria.core.EvenementCriteria;
 import ma.sir.event.dao.criteria.history.EvenementHistoryCriteria;
 import ma.sir.event.service.facade.admin.EvenementAdminService;
 import ma.sir.event.service.facade.admin.SalleAdminService;
+import ma.sir.event.service.impl.admin.BlocOperatoireInformation;
 import ma.sir.event.service.impl.admin.EvenementAdminRedisServiceImpl;
 import ma.sir.event.ws.converter.EvenementConverter;
+import ma.sir.event.ws.dto.BlocOperatoirMetaDataDto;
 import ma.sir.event.ws.dto.EvenementDto;
 import ma.sir.event.zynerator.controller.AbstractController;
 import ma.sir.event.zynerator.dto.AuditEntityDto;
 import ma.sir.event.zynerator.dto.FileTempDto;
+import ma.sir.event.zynerator.util.DateUtil;
 import ma.sir.event.zynerator.util.PaginatedList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -104,13 +108,13 @@ public class EvenementRestAdmin extends AbstractController<Evenement, EvenementD
     }
 
     @ApiOperation("find by bloc operatoir reference")
-    @GetMapping("bloc-operatoir/reference/{reference}")
-    public List<EvenementRedis> findBySalleBlocOperatoirReference(@PathVariable String reference) {
+    @GetMapping("bloc-operatoir/reference/{reference}/lastUpdate/{lastUpdate}")
+    public BlocOperatoireInformation findBySalleBlocOperatoirReference(@PathVariable String reference,@PathVariable String lastUpdate) {
         long start = System.currentTimeMillis();
-        List<EvenementRedis> bySalleBlocOperatoirReference = service.findBySalleBlocOperatoirReference(reference);
+        BlocOperatoireInformation blocOperatoireInformation=service.findBySalleBlocOperatoirReference(reference, DateUtil.convert(lastUpdate));
         long end = System.currentTimeMillis();
         System.out.println("reference == "+reference+" and duration = " + ((end - start))+" ms");
-        return bySalleBlocOperatoirReference;
+        return blocOperatoireInformation;
     }
 
     @ApiOperation("delete by salle id")
