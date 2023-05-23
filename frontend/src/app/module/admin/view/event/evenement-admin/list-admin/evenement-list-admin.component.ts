@@ -15,6 +15,7 @@ import {BlocOperatoirDto} from "../../../../../../controller/model/BlocOperatoir
 import {BlocOperatoirService} from "../../../../../../controller/service/BlocOperatoir.service";
 import {WebSocketService} from "../../../../../../controller/service/web-socket.service";
 import {Socket} from "ngx-socket-io";
+import {BlocOperatoirInformationDto} from "../../../../../../controller/model/BlocOperatoirInformation.model";
 
 
 @Component({
@@ -155,8 +156,10 @@ export class EvenementListAdminComponent extends AbstractListController<Evenemen
         console.log("finn open "+this.selectedBloc.reference)*/
         if (this.selectedBloc != null && this.selectedBloc.reference != null) {
             console.log('about to featch data for block ' + this.selectedBloc.reference);
-            let lastUpdate = localStorage.getItem(this.selectedBloc.reference);
-            this.service.findBySalleBlockOperatoirReference(this.selectedBloc.reference, lastUpdate).subscribe(data => {
+            let blocInformation = new BlocOperatoirInformationDto();
+            blocInformation.reference=this.selectedBloc.reference;
+            blocInformation.lastUpdate = localStorage.getItem(this.selectedBloc.reference);
+            this.service.findBySalleBlockOperatoirReference(blocInformation).subscribe(data => {
                 if (data != null) {
                     localStorage.setItem(this.selectedBloc.reference, data.lastUpdate);
                     this.items = data.evenementRediss;

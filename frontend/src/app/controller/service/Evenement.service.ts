@@ -20,8 +20,8 @@ export class EvenementService extends AbstractService<EvenementDto, EvenementCri
         this.setApi(environment.apiUrl + 'admin/evenement/');
     }
 
-    public findBySalleBlockOperatoirReference(reference: string, lastUpdate: string): Observable<BlocOperatoirInformationDto>{
-        return this.http.get<BlocOperatoirInformationDto>(this.API + 'bloc-operatoir/reference/' + reference+'/lastUpdate/' +lastUpdate)
+    public findBySalleBlockOperatoirReference(input: BlocOperatoirInformationDto): Observable<BlocOperatoirInformationDto>{
+        return this.http.post<BlocOperatoirInformationDto>(this.API + 'bloc-operatoir',input)
     }
 
     public constrcutDto(): EvenementDto {

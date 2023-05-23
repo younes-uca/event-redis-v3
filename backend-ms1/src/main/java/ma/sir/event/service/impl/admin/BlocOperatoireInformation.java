@@ -15,6 +15,9 @@ public class BlocOperatoireInformation {
         this.lastUpdate = lastUpdate;
     }
 
+    public BlocOperatoireInformation() {
+    }
+
     public String getReference() {
         return reference;
     }

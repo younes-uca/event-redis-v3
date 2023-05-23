@@ -15,6 +15,7 @@ import ma.sir.event.service.facade.admin.SalleAdminService;
 import ma.sir.event.service.impl.admin.BlocOperatoireInformation;
 import ma.sir.event.service.impl.admin.EvenementAdminRedisServiceImpl;
 import ma.sir.event.ws.converter.EvenementConverter;
+import ma.sir.event.ws.dto.BlocOperatoirDto;
 import ma.sir.event.ws.dto.BlocOperatoirMetaDataDto;
 import ma.sir.event.ws.dto.EvenementDto;
 import ma.sir.event.zynerator.controller.AbstractController;
@@ -108,12 +109,12 @@ public class EvenementRestAdmin extends AbstractController<Evenement, EvenementD
     }
 
     @ApiOperation("find by bloc operatoir reference")
-    @GetMapping("bloc-operatoir/reference/{reference}/lastUpdate/{lastUpdate}")
-    public BlocOperatoireInformation findBySalleBlocOperatoirReference(@PathVariable String reference,@PathVariable String lastUpdate) {
+    @PostMapping("bloc-operatoir")
+    public BlocOperatoireInformation findBySalleBlocOperatoirReference(@RequestBody BlocOperatoireInformation input) {
         long start = System.currentTimeMillis();
-        BlocOperatoireInformation blocOperatoireInformation=service.findBySalleBlocOperatoirReference(reference, DateUtil.convert(lastUpdate));
+        BlocOperatoireInformation blocOperatoireInformation=service.findBySalleBlocOperatoirReference(input.getReference(), DateUtil.convert(input.getLastUpdate()));
         long end = System.currentTimeMillis();
-        System.out.println("reference == "+reference+" and duration = " + ((end - start))+" ms");
+        System.out.println("reference == "+input.getReference()+" , lastUpdate front ="+input.getLastUpdate()+" and duration = " + ((end - start))+" ms");
         return blocOperatoireInformation;
     }
 
